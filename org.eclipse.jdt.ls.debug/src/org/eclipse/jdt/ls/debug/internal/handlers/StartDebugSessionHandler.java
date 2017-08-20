@@ -9,7 +9,7 @@
 *     Microsoft Corporation - initial API and implementation
 *******************************************************************************/
 
-package org.eclipse.jdt.ls.core.internal.handlers;
+package org.eclipse.jdt.ls.debug.internal.handlers;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -19,13 +19,18 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.jdt.ls.core.debug.IDebugServer;
 import org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin;
+import org.eclipse.jdt.ls.debug.internal.IDebugServer;
 import org.eclipse.lsp4j.jsonrpc.CompletableFutures;
 
 public class StartDebugSessionHandler {
 	private static final String EXTENSIONPOINT_ID = "org.eclipse.jdt.ls.core.debugserver";
 
+	/**
+	 * Start debug server.
+	 * @param type String
+	 * @return result
+	 */
 	public CompletableFuture<String> startDebugServer(String type) {
 		return CompletableFutures.computeAsync(cm -> {
 			if (type != null && type.equals("vscode.java.debugsession")) {
@@ -35,15 +40,20 @@ public class StartDebugSessionHandler {
 					if ("java".equals(e.getAttribute("type"))) {
 						final String[] serverPort = new String[] { "" };
 						SafeRunner.run(new ISafeRunnable() {
+							
 							@Override
 							public void run() throws Exception {
 								final IDebugServer debugServer = (IDebugServer) e.createExecutableExtension("class");
 								debugServer.start();
 								serverPort[0] = String.valueOf(debugServer.getPort());
 							}
+							
 							@Override
 							public void handleException(Throwable ex) {
-								IStatus status = new Status(IStatus.ERROR, JavaLanguageServerPlugin.PLUGIN_ID, IStatus.OK, "Error in JDT Core during launching debug server", ex); //$NON-NLS-1$
+								IStatus status = new Status(IStatus.ERROR, 
+										JavaLanguageServerPlugin.PLUGIN_ID, 
+										IStatus.OK, 
+										"Error in JDT Core during launching debug server", ex); //$NON-NLS-1$
 								JavaLanguageServerPlugin.log(status);
 							}
 						});

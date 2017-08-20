@@ -18,14 +18,19 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.eclipse.jdt.ls.core.debug.IDebugServer;
 import org.eclipse.jdt.ls.debug.adapter.ProtocolServer;
+import org.eclipse.jdt.ls.debug.internal.ConnectionStreamFactory;
+import org.eclipse.jdt.ls.debug.internal.IDebugServer;
 import org.eclipse.jdt.ls.debug.internal.Logger;
 
 public class JavaDebugServer implements IDebugServer {
     private ServerSocket serverSocket = null;
     private Socket connection = null;
     private ProtocolServer protocolServer = null;
+    
+    public static void startConnection() {
+		ConnectionStreamFactory connectionFactory = new ConnectionStreamFactory();
+    }
 
     /**
      * Constructs a JavaDebugServer instance which will launch a ServerSocket to 

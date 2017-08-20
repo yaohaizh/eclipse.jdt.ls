@@ -27,12 +27,12 @@ import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.WorkingCopyOwner;
 import org.eclipse.jdt.ls.core.internal.CancellableProgressMonitor;
-import org.eclipse.jdt.ls.core.internal.ClasspathResolveRequestParams;
 import org.eclipse.jdt.ls.core.internal.JavaClientConnection;
 import org.eclipse.jdt.ls.core.internal.JavaClientConnection.JavaLanguageClient;
 import org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin;
 import org.eclipse.jdt.ls.core.internal.JavaProtocolExtensions;
 import org.eclipse.jdt.ls.core.internal.LanguageServerWorkingCopyOwner;
+import org.eclipse.jdt.ls.core.internal.LoadBundleRequestParams;
 import org.eclipse.jdt.ls.core.internal.ServiceStatus;
 import org.eclipse.jdt.ls.core.internal.managers.ProjectsManager;
 import org.eclipse.jdt.ls.core.internal.preferences.PreferenceManager;
@@ -450,18 +450,12 @@ public class JDTLanguageServer implements LanguageServer, TextDocumentService, W
 	}
 
 	@Override
-	public CompletableFuture<String> startDebugSession(String type) {
-		logInfo(">> java/startDebugSession");
-		StartDebugSessionHandler handler = new StartDebugSessionHandler();
-		return handler.startDebugServer(type);
+	public CompletableFuture<Long> loadBundle(LoadBundleRequestParams param) {
+		logInfo(">> java/loadBundle");
+		LoadBundleHandler handler = new LoadBundleHandler();
+		return handler.loadBundle(param);
 	}
 
-	@Override
-	public CompletableFuture<String> resolveClasspaths(ClasspathResolveRequestParams param) {
-		logInfo(">> java/resolveClasspath");
-		ResolveClasspathsHandler handler = new ResolveClasspathsHandler();
-		return handler.resolveClasspaths(param);
-	}
 
 	public void sendStatus(ServiceStatus serverStatus, String status) {
 		if (client != null) {

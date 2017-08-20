@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.Authenticator;
+import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -244,6 +245,23 @@ public class JavaLanguageServerPlugin implements BundleActivator {
 
 	public WorkingCopyOwner getWorkingCopyOwner(){
 		return this.protocol.getWorkingCopyOwner();
+	}
+
+	public Long installBundle(String bundleLocation) {
+		Bundle bundle;
+		try {
+			File f = new File(bundleLocation);
+			bundle = context.installBundle(f.toURI().toURL().toString());
+			context.getBundle(bundleLocation);
+			bundle.start();
+			return bundle.getBundleId();
+		} catch (BundleException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MalformedURLException ex) {
+			ex.printStackTrace();
+		}
+		return new Long(-1);
 	}
 
 	public static JavaLanguageServerPlugin getInstance(){

@@ -59,6 +59,7 @@ public class ConnectionStreamFactory {
 				return readSocket.getInputStream();
 			}
 		}
+
 		@Override
 		public OutputStream getOutputStream() throws IOException {
 			final File wFile = new File(writeFileName);

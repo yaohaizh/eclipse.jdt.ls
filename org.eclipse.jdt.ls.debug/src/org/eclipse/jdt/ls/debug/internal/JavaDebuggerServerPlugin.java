@@ -11,10 +11,14 @@
 
 package org.eclipse.jdt.ls.debug.internal;
 
+import java.io.IOException;
+
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.ls.debug.internal.DebugClientConnection.DebugClient;
+import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
@@ -27,11 +31,28 @@ public class JavaDebuggerServerPlugin implements BundleActivator {
     @Override
     public void start(BundleContext context) throws Exception {
         JavaDebuggerServerPlugin.context = context;
+        startConnection();
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
 
+    }
+    
+    private void startListening() {
+    
+    }
+
+    
+    private void startConnection() throws IOException {
+		DebugServer protocol = new DebugServer();
+		ConnectionStreamFactory connectionFactory = new ConnectionStreamFactory();
+		
+		Launcher<DebugClient> launcher = Launcher.createLauncher(protocol, DebugClient.class,
+				connectionFactory.getInputStream(),
+				connectionFactory.getOutputStream());
+		protocol.connectClient(launcher.getRemoteProxy());
+		launcher.startListening();
     }
     
     /**

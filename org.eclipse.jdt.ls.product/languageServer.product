@@ -3,7 +3,6 @@
 
 <product name="Java Language Server" uid="languageServer.product" id="org.eclipse.jdt.ls.core.product" application="org.eclipse.jdt.ls.core.id1" version="1.0.0" useFeatures="false" includeLaunchers="true">
 
-
    <configIni use="default">
    </configIni>
 
@@ -13,19 +12,19 @@
    </launcherArgs>
 
    <launcher>
+      <solaris/>
       <win useIco="false">
          <bmp/>
       </win>
    </launcher>
 
-
    <vm>
    </vm>
-
 
    <plugins>
       <plugin id="com.ibm.icu.base"/>
       <plugin id="javax.xml"/>
+      <plugin id="org.apache.commons.io"/>
       <plugin id="org.eclipse.ant.core"/>
       <plugin id="org.eclipse.buildship.core"/>
       <plugin id="org.eclipse.compare.core"/>
@@ -58,7 +57,6 @@
       <plugin id="org.eclipse.jdt.launching"/>
       <plugin id="org.eclipse.jdt.launching.macosx"/>
       <plugin id="org.eclipse.jdt.ls.core"/>
-      <plugin id="org.eclipse.jdt.ls.debug"/>
       <plugin id="org.eclipse.m2e.core"/>
       <plugin id="org.eclipse.m2e.jdt"/>
       <plugin id="org.eclipse.m2e.lifecyclemapping.defaults"/>
@@ -76,7 +74,6 @@
       <plugin id="org.eclipse.jdt.core" autoStart="false" startLevel="0" />
       <plugin id="org.eclipse.jdt.launching" autoStart="false" startLevel="0" />
       <plugin id="org.eclipse.jdt.ls.core" autoStart="true" startLevel="0" />
-      <plugin id="org.eclipse.jdt.ls.debug" autoStart="true" startLevel="0" />
    </configurations>
 
    <preferencesInfo>
