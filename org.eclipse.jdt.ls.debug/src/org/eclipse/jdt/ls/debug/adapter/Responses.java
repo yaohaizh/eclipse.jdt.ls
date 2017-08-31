@@ -101,9 +101,18 @@ public class Responses {
 
     public static class SetVariablesResponseBody extends ResponseBody {
         public String value;
+        public String type;
+        public int variablesReference;
+        public int indexedVariables;
 
-        public SetVariablesResponseBody(String val) {
-            value = val;
+        /**
+         * Constructs a SetVariablesResponseBody with the given variable information.
+         */
+        public SetVariablesResponseBody(String type, String value, int variablesReference, int indexedVariables) {
+            this.type = type;
+            this.value = value;
+            this.variablesReference = variablesReference;
+            this.indexedVariables = indexedVariables;
         }
     }
 
@@ -136,14 +145,16 @@ public class Responses {
         public String result;
         public int variablesReference;
         public String type;
+        public int indexedVariables;
 
         /**
          * Constructor.
          */
-        public EvaluateResponseBody(String value, int reff, String type) {
+        public EvaluateResponseBody(String value, int ref, String type, int indexedVariables) {
             this.result = value;
-            this.variablesReference = reff;
+            this.variablesReference = ref;
             this.type = type;
+            this.indexedVariables = indexedVariables;
         }
     }
 
