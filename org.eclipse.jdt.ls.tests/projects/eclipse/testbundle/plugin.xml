@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension-point id="testbundle.ext" name="ext" schema="schema/testbundle.ext.exsd"/>
-   <extension 
-   		id="testbundle.ext.implementation"
-        point="testbundle.ext">
-      	<implementor
-            class="testbundle.ExtFactory"
+   <extension id="testbundle.participant"
+         point="org.eclipse.jdt.ls.core.participant">
+               <implementor
+            class="testbundle.ParticipantFactory"
             type="java">
-      	</implementor>
+      </implementor>
    </extension>
 </plugin>

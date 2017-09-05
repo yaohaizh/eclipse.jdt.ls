@@ -5,10 +5,10 @@
 	<parent>
 		<groupId>org.eclipse.jdt.ls</groupId>
 		<artifactId>parent</artifactId>
-		<version>0.3.0-SNAPSHOT</version>
+		<version>0.4.0-SNAPSHOT</version>
 	</parent>
 	<name>${base.name} :: Bundle</name>
-	<packaging>eclipse-test-plugin</packaging>
+	<packaging>eclipse-plugin</packaging>
 
 	<build>
 		<pluginManagement>

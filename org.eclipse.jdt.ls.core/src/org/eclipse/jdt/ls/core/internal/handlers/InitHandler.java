@@ -20,13 +20,19 @@ import org.eclipse.core.resources.IResourceChangeEvent;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.ISafeRunnable;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.SafeRunner;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.ls.core.internal.IParticipant;
 import org.eclipse.jdt.ls.core.internal.JavaClientConnection;
+import org.eclipse.jdt.ls.core.internal.JavaInitializeResult;
 import org.eclipse.jdt.ls.core.internal.JavaLanguageServerPlugin;
 import org.eclipse.jdt.ls.core.internal.ServiceStatus;
 import org.eclipse.jdt.ls.core.internal.managers.ProjectsManager;
@@ -81,7 +87,8 @@ final public class InitHandler {
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(new WorkspaceDiagnosticsHandler(connection, projectsManager), IResourceChangeEvent.POST_BUILD | IResourceChangeEvent.POST_CHANGE);
 		JavaLanguageServerPlugin.getLanguageServer().setParentProcessId(param.getProcessId().longValue());
 		BundleUtils.loadBundles(param.getInitializationOptions());
-		InitializeResult result = new InitializeResult();
+
+		JavaInitializeResult result = new JavaInitializeResult();
 		ServerCapabilities capabilities = new ServerCapabilities();
 		capabilities.setTextDocumentSync(TextDocumentSyncKind.Incremental);
 		capabilities.setCompletionProvider(new CompletionOptions(Boolean.TRUE, Arrays.asList(".","@","#")));
@@ -108,7 +115,29 @@ final public class InitHandler {
 		}
 		capabilities.setCodeActionProvider(Boolean.TRUE);
 		result.setCapabilities(capabilities);
+		initializeParticipants(result);
 		return result;
+	}
+
+	public static void initializeParticipants(JavaInitializeResult result) {
+		IConfigurationElement[] elements = Platform.getExtensionRegistry().getConfigurationElementsFor(IParticipant.EXTENSIONPOINT_ID);
+		for (IConfigurationElement e : elements) {
+			if ("java".equals(e.getAttribute("type"))) {
+				SafeRunner.run(new ISafeRunnable() {
+					@Override
+					public void run() throws Exception {
+						final IParticipant participant = (IParticipant) e.createExecutableExtension("class");
+						participant.initialize(result);
+					}
+
+					@Override
+					public void handleException(Throwable ex) {
+						IStatus status = new Status(IStatus.ERROR, JavaLanguageServerPlugin.PLUGIN_ID, IStatus.OK, "Error in JDT Core during launching participants", ex); //$NON-NLS-1$
+						JavaLanguageServerPlugin.log(status);
+					}
+				});
+			}
+		}
 	}
 
 	private void triggerInitialization(String root) {

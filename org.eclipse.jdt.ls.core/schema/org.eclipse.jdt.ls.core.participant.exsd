@@ -1,12 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- Schema file written by PDE -->
-<schema targetNamespace="testbundle" xmlns="http://www.w3.org/2001/XMLSchema">
+<schema targetNamespace="org.eclipse.jdt.ls.core" xmlns="http://www.w3.org/2001/XMLSchema">
 <annotation>
       <appinfo>
-         <meta.schema plugin="testbundle" id="testbundle.ext" name="ext"/>
+         <meta.schema plugin="org.eclipse.jdt.ls.core" id="org.eclipse.jdt.ls.core.participant" name="lsparticipant"/>
       </appinfo>
       <documentation>
-         [Enter description of this extension point.]
+         Extension point for Java language server participant.
       </documentation>
    </annotation>
 
@@ -44,41 +44,9 @@
       </complexType>
    </element>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="since"/>
-      </appinfo>
-      <documentation>
-         [Enter the first release in which this extension point appears.]
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="examples"/>
-      </appinfo>
-      <documentation>
-         [Enter extension point usage example here.]
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="apiinfo"/>
-      </appinfo>
-      <documentation>
-         [Enter API information here.]
-      </documentation>
-   </annotation>
 
-   <annotation>
-      <appinfo>
-         <meta.section type="implementation"/>
-      </appinfo>
-      <documentation>
-         [Enter information about supplied implementation of this extension point.]
-      </documentation>
-   </annotation>
 
 
 </schema>
