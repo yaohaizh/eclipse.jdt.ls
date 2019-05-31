@@ -61,6 +61,10 @@ import org.eclipse.jdt.ls.core.internal.handlers.HashCodeEqualsHandler.GenerateH
 import org.eclipse.jdt.ls.core.internal.handlers.OverrideMethodsHandler.AddOverridableMethodParams;
 import org.eclipse.jdt.ls.core.internal.handlers.OverrideMethodsHandler.OverridableMethodsResponse;
 import org.eclipse.jdt.ls.core.internal.lsp.JavaProtocolExtensions;
+import org.eclipse.jdt.ls.core.internal.lsp.SelectionRange;
+import org.eclipse.jdt.ls.core.internal.lsp.SelectionRangeParams;
+import org.eclipse.jdt.ls.core.internal.lsp.TextDocumentProposedClient;
+import org.eclipse.jdt.ls.core.internal.lsp.TextDocumentProposedService;
 import org.eclipse.jdt.ls.core.internal.managers.ContentProviderManager;
 import org.eclipse.jdt.ls.core.internal.managers.FormatterManager;
 import org.eclipse.jdt.ls.core.internal.managers.ProjectsManager;
@@ -128,7 +132,7 @@ import org.eclipse.lsp4j.services.WorkspaceService;
  * @author Gorkem Ercan
  *
  */
-public class JDTLanguageServer implements LanguageServer, TextDocumentService, WorkspaceService, JavaProtocolExtensions {
+public class JDTLanguageServer implements LanguageServer, TextDocumentService, WorkspaceService, JavaProtocolExtensions, TextDocumentProposedClient {
 
 	public static final String JAVA_LSP_JOIN_ON_COMPLETION = "java.lsp.joinOnCompletion";
 	/**
@@ -233,6 +237,7 @@ public class JDTLanguageServer implements LanguageServer, TextDocumentService, W
 		if (preferenceManager.getClientPreferences().isImplementationDynamicRegistered()) {
 			registerCapability(Preferences.IMPLEMENTATION_ID, Preferences.IMPLEMENTATION);
 		}
+		registerCapability(TextDocumentProposedService.CAPABILITY_ID, TextDocumentProposedService.CAPABILITY_NAME);
 		// we do not have the user setting initialized yet at this point but we should
 		// still call to enable defaults in case client does not support configuration changes
 		syncCapabilitiesToSettings();
@@ -787,6 +792,15 @@ public class JDTLanguageServer implements LanguageServer, TextDocumentService, W
 		return computeAsync((monitor) -> HashCodeEqualsHandler.generateHashCodeEquals(params));
 	}
 
+	/* (non-Javadoc)
+	 * @see org.eclipse.jdt.ls.core.internal.lsp.TextDocumentProposedClient#selectionRange(org.eclipse.lsp4j.TextDocumentPositionParams)
+	 */
+	@Override
+	public CompletableFuture<List<SelectionRange>> selectionRange(SelectionRangeParams position) {
+		logInfo(">> java/addOverridableMethods");
+		return computeAsync((montior) -> (new SelectionRangeHandler()).selectionRange(position, montior));
+	}
+
 	@Override
 	public CompletableFuture<CheckToStringResponse> checkToStringStatus(CodeActionParams params) {
 		logInfo(">> java/checkToStringStatus");
@@ -895,5 +909,6 @@ public class JDTLanguageServer implements LanguageServer, TextDocumentService, W
 			JavaLanguageServerPlugin.logException(e.getMessage(), e);
 		}
 	}
+
 
 }
