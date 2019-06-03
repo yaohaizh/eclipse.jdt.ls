@@ -104,11 +104,11 @@ public class CreateFileChange extends ResourceChange {
 		return fSource;
 	}
 
-	protected void setPath(IPath path) {
+	public void setPath(IPath path) {
 		fPath= path;
 	}
 
-	protected IPath getPath() {
+	public IPath getPath() {
 		return fPath;
 	}
 
